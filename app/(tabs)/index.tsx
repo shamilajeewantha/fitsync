@@ -1,4 +1,4 @@
-/* import React from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import HorizontalLine from '@/components/HorizontalLine';
 
@@ -13,10 +13,10 @@ const styles = StyleSheet.create({
 
 
 });
- */
 
 
 
+/* 
 import React, { useRef } from 'react';
 import { View, Image, StyleSheet, Dimensions, TouchableOpacity, Text } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
@@ -100,3 +100,4 @@ const styles = StyleSheet.create({
 });
 
 export default DrawLinesOnImage;
+ */
