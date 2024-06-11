@@ -1,9 +1,41 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Image, StyleSheet, LayoutChangeEvent, NativeSyntheticEvent, PanResponder, Dimensions, Text, Button } from 'react-native';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { View, Image, StyleSheet, LayoutChangeEvent, NativeSyntheticEvent, PanResponder, Dimensions, Text, Button, TextInput } from 'react-native';
+import { NumberContext } from '@/contexts/NumberContexts';
+
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const MyComponent: React.FC = () => {
+
+  const context = useContext(NumberContext);
+
+  // Handling the case where context is undefined
+  if (!context) {
+    throw new Error('NumberContext is not provided');
+  }
+
+  const { addData } = context;
+  const [inputValue, setInputValue] = useState('');
+
+  const handleAddData = () => {
+    if (imageLayoutRef.current) {
+
+    const heightPercentage = ((linePosition-imageLayoutRef.current.y) / imageLayoutRef.current.height) * 100;
+    const key = heightPercentage;
+    const value = parseInt(inputValue, 10);
+
+    if (!isNaN(key) && !isNaN(value)) {
+      addData(key, value);
+      setInputValue('');
+    }
+    setLinePosition(screenHeight / 2);
+  }
+  };
+
+
+
+
+
   const [linePosition, setLinePosition] = useState(screenHeight / 2);
   const imageLayoutRef = useRef<{ x: number; y: number; width: number; height: number } | null>(null);
   const [lineWidth, setLineWidth] = useState(0);
@@ -85,8 +117,14 @@ const MyComponent: React.FC = () => {
       />
       <View style={[styles.line, { top: linePosition - 0.5, width: lineWidth }]} />
       <Text style={styles.text}>Line position: {linePosition}</Text>
-      <Button title="Set" onPress={() => setLinePosition(screenHeight / 2)} />
-
+      <TextInput
+        value={inputValue}
+        onChangeText={setInputValue}
+        placeholder="Enter a value (number)"
+        keyboardType="numeric"
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 20, paddingHorizontal: 10 }}
+      />
+      <Button title="Add Data" onPress={handleAddData} />
     </View>
   );
 };
