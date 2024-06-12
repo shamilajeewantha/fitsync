@@ -4,6 +4,8 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import {  AuthProvider } from '@/contexts/authContext';
+
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -27,11 +29,18 @@ export default function RootLayout() {
   }
 
   return (
+    <AuthProvider>
+
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
+        <Stack.Screen name="index" options={{ title: 'FitSync'}} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false  }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(customer_measurement)" options={{ title: 'Measurement', headerShown: true }} />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
+    </AuthProvider>
+
   );
 }
