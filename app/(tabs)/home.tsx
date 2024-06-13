@@ -15,7 +15,7 @@ export default function HomeScreen() {
     const fetchProtectedData = async () => {
       const token = await AsyncStorage.getItem('token');
       try {
-        const response = await axios.get('http://192.168.8.100:3000/protected', {
+        const response = await axios.get('http://192.168.8.100:3000/order', {
           headers: { Authorization: token || '' }
         });
         setMessage(response.data);

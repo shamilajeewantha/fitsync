@@ -25,8 +25,17 @@ export default function RegisterScreen({ navigation }: Props) {
 
   const register = async () => {
     try {
-      await axios.post('http://192.168.8.100:3000/register', { username, password });
-      router.replace("/login");
+    const response = await axios.post('http://192.168.8.100:3000/customer/register', {
+      first_name: "firstName",
+      last_name: "lastName",
+      email: username,
+      password: password
+    });
+    console.log('message :', response.data.message);
+    console.log('customer :', response.data.customer);
+
+      
+    router.replace("/login");
     } catch (error) {
       console.error(error);
     }

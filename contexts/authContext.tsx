@@ -21,13 +21,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (username: string, password: string) => {
     try {
-      const response = await axios.post('http://192.168.8.100:3000/login', { username, password });
+      const response = await axios.post('http://192.168.8.100:3000/customer/login', {
+        email: username,
+        password: password
+      });
+      console.log('message :', response.data.message);
+      console.log('token :', response.data.token);
+
       const token = response.data.token;
       await AsyncStorage.setItem('token', token);
       setUser({ username });
+      console.log('user login complete');
       router.replace("/home");
 
     } catch (error) {
+      console.log('error login');
       console.error(error);
     }
   };
