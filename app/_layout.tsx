@@ -31,7 +31,7 @@ export default function RootLayout() {
   return (
     <AuthProvider>
 
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={DarkTheme}>
       <Stack>
         <Stack.Screen name="index" options={{ title: 'FitSync'}} />
         <Stack.Screen name="(auth)" options={{ headerShown: false  }} />

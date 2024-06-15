@@ -1,5 +1,17 @@
 import { Stack } from 'expo-router/stack';
+import React from 'react';
 
 export default function Layout() {
-  return <Stack />;
+  return (
+    <Stack>
+      <Stack.Screen
+        name="login"
+        options={{ title: 'Login' }}
+      />
+      <Stack.Screen
+        name="signup"
+        options={{ title: 'Signup' }}
+      />
+    </Stack>
+  );
 }

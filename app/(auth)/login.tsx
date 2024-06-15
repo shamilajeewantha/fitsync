@@ -1,47 +1,62 @@
 import React, { useState, useContext } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Button, StyleSheet, Alert } from 'react-native'; // Import Alert
+import { TextInput as PaperTextInput } from 'react-native-paper';
 import { AuthContext } from '@/contexts/authContext';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
+import { router } from "expo-router";
 
-type RootStackParamList = {
-  Login: undefined;
-  Register: undefined;
-};
-
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
-type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
-
-type Props = {
-  navigation: LoginScreenNavigationProp;
-  route: LoginScreenRouteProp;
-};
-
-export default function LoginScreen({ navigation }: Props) {
+export default function LoginScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const authContext = useContext(AuthContext);
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
 
   if (!authContext) return null;
   const { login } = authContext;
 
+  const togglePasswordVisibility = () => {
+    setSecureTextEntry(!secureTextEntry);
+  };
+
+  const handleLogin = async () => {
+    const success = await login(username, password);
+    if (success) {
+      console.log('Login successful');
+      router.replace("/home");
+    } else {
+      // Show alert and reset password field
+      Alert.alert(
+        'Login Failed',
+        'Invalid username or password. Please try again.',
+        [
+          {
+            text: 'OK',
+            onPress: () => setPassword(''), // Reset password field
+          }
+        ],
+        { cancelable: false }
+      );
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <TextInput
-        placeholder="Username"
+      <PaperTextInput
+        label="Email" 
+        activeUnderlineColor="#1E90FF"
         value={username}
         onChangeText={setUsername}
         style={styles.input}
       />
-      <TextInput
-        placeholder="Password"
+      <PaperTextInput
+        label="Password" 
+        activeUnderlineColor="#1E90FF"
         value={password}
         onChangeText={setPassword}
-        secureTextEntry
+        secureTextEntry={secureTextEntry}
+        right={<PaperTextInput.Icon icon={secureTextEntry ? 'eye' : 'eye-off'} onPress={togglePasswordVisibility} />}
         style={styles.input}
       />
-      <Button title="Login" onPress={() => login(username, password)} />
-      <Button title="Register" onPress={() => navigation.navigate('Register')} />
+      <Button title="Login" onPress={handleLogin} />
     </View>
   );
 }
@@ -53,10 +68,6 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
     marginBottom: 12,
-    paddingHorizontal: 8,
   },
 });
