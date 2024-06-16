@@ -7,6 +7,7 @@ import { Searchbar } from 'react-native-paper';
 import { router, useRouter } from 'expo-router';
 
 
+
 export default function TabTwoScreen() {
   const [shops, setShops] = useState([]);
   const [filteredShops, setFilteredShops] = useState([]);
@@ -37,7 +38,7 @@ export default function TabTwoScreen() {
   const navigateToShopDetail = (shopId) => {
     // Navigate to shop detail screen with shopId as parameter
     console.log('Navigating to shop detail', shopId.shop_name);
-    router.push('/explore/shopview');
+    router.push({ pathname: `/explore/shopview`, params: shopId });
 
   };
 
