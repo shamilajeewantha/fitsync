@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
 import React from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
@@ -15,7 +15,7 @@ export default function shopview() {
   const handlePlaceOrder = () => {
     // Implement your logic for placing an order here
     console.log('Placing order...');
-    router.push("/measurement")
+    router.push("/marker")
   };
 
   return (
@@ -34,9 +34,9 @@ export default function shopview() {
         <ThemedText style={styles.detailsText}>{phone}</ThemedText>
         <ThemedText type="subtitle">Email</ThemedText>
         <ThemedText style={styles.detailsText}>{email}</ThemedText>
-        <TouchableOpacity onPress={handlePlaceOrder} style={styles.button}>
+        <Pressable onPress={handlePlaceOrder} style={styles.button}>
           <Text style={styles.buttonText}>Place Order</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
     </View>

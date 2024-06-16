@@ -1,61 +1,110 @@
-import React, { useEffect, useState } from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import axios from 'axios';
+// components/ReadComponent.tsx
+import React, { useContext, useRef, useState } from 'react';
+import { View, Text, Image, StyleSheet, Dimensions, LayoutChangeEvent, ScrollView, Pressable } from 'react-native';
+import { NumberContext } from '@/contexts/NumberContexts';
+import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
 
-interface KeyValuePair {
-  key: number;
-  value: number;
-}
 
-const App = () => {
-  const [data, setData] = useState<KeyValuePair[]>([]);
 
-  useEffect(() => {
-    axios.get('http://192.168.8.100:3000/integer-key-value-pairs')
-      .then(response => {
-        setData(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+
+
+const ReadComponent: React.FC = () => {
+  const context = useContext(NumberContext);
+
+  // Handling the case where context is undefined
+  if (!context) {
+    throw new Error('NumberContext is not provided');
+  }
+
+  const { data } = context;
+  const imageLayoutRef = useRef<{ x: number; y: number; width: number; height: number } | null>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+
+
+  const handleImageLayout = (event: LayoutChangeEvent) => {
+    const { x, y, width, height } = event.nativeEvent.layout;
+    imageLayoutRef.current = { x, y, width, height };
+    console.log(`Image Preview Layout:\nX: ${x}\nY: ${y}\nWidth: ${width}\nHeight: ${height}`);
+    setImageLoaded(true);
+  };
+
+  const handlePlaceOrder = () => {
+    // Implement your logic for placing an order here
+    console.log('Placing order...');
+  };
+
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
-        <View style={styles.sectionContainer}>
-          {data.map((pair) => (
-            <Text key={pair.key} style={styles.pair}>
-              Key: {pair.key}, Value: {pair.value}
-            </Text>
-          ))}
+    <ThemedView style={styles.container}>
+      <Image
+        style={styles.image}
+        source={require('@/assets/images/woman.png')}
+        onLayout={handleImageLayout}
+
+      />
+      {imageLoaded && data.map(({ key, value }, index) => (
+        <View key={index} style={{position: 'absolute', top: imageLayoutRef.current.y+(key / 100) * imageLayoutRef.current.height, width: screenWidth/1.1 }}>
+        <Text style={styles.text}>MS {index+1}</Text>
+        <View style={[styles.line, { width: screenWidth-45 }]} />
         </View>
+      ))}
+
+      <ScrollView >
+      <View style={{ alignItems: 'center', marginTop:15}}> 
+        <ThemedText type="subtitle">Your Data</ThemedText>          
+        {data.map(({ key, value }, index) => (
+          <ThemedText style={{fontFamily: 'SpaceMono', marginTop:10}} key={index}>Measurement {index+1} : {value}cm</ThemedText>
+        ))}
+
+      </View>
       </ScrollView>
-    </SafeAreaView>
+      <Pressable onPress={handlePlaceOrder} style={styles.button}>
+          <Text style={styles.buttonText}>Confirm Order</Text>
+      </Pressable>
+    </ThemedView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  image: {
+    width: 250, // Define a fixed width for the image
+    height: 500, // Define a fixed height for the image
   },
-  pair: {
+  line: {
+    position: 'absolute',
+    height: 2, // Adjusted the height to make the line more visible
+    backgroundColor: 'red', // Change this value to adjust the color of the line
+  },
+  text: {
+    color: 'red',
+  },
+  button: {
+    backgroundColor: '#eb3483',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
     fontSize: 18,
-    marginVertical: 8,
+    textAlign: 'center',
   },
 });
 
-export default App;
+
+
+export default ReadComponent;

@@ -19,9 +19,10 @@ export default function TabLayout() {
         headerShown: true,
       }}>
       <Tabs.Screen
-        name="measurement"
+        name="marker"
         options={{
           title: 'Size Sheet',
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
           ),

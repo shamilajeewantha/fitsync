@@ -36,7 +36,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ title: 'FitSync'}} />
         <Stack.Screen name="(auth)" options={{ headerShown: false  }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="(customer_measurement)" options={{ title: 'Measurement', headerShown: true }} />
+        <Stack.Screen name="(customer_measurement)" options={{ title: 'Measurement', headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
