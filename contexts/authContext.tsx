@@ -5,8 +5,8 @@ import { Link, router } from "expo-router";
 
 
 interface AuthContextProps {
-  user: { first_name: string } | null;
-  login: (username: string, password: string) => Promise<boolean>; // Modify return type
+  user: { response_email: string } | null;
+  login: (email: string, password: string) => Promise<boolean>; // Modify return type
   logout: () => Promise<void>;
 }
 
@@ -17,27 +17,27 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<{ first_name: string } | null>(null);
+  const [user, setUser] = useState<{ response_email: string } | null>(null);
 
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const response = await axios.post('http://192.168.8.100:3000/customer/login', {
-        email: username,
+        email: email,
         password: password
       });
 
       console.log('authctx message:', response.data.message);
-      console.log('authctx first_name:', response.data.first_name);
+      console.log('authctx email:', response.data.email);
       console.log('authctx token:', response.data.token);
 
-      const first_name = response.data.first_name;
+      const response_email = response.data.email;
       const token = response.data.token;
 
       await AsyncStorage.setItem('token', token);
-      await AsyncStorage.setItem('email', username);
+      await AsyncStorage.setItem('email', email);
       await AsyncStorage.setItem('password', password);
 
-      setUser({ first_name });
+      setUser({ response_email });
 
       console.log('user login complete');
 
