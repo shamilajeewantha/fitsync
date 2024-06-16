@@ -3,11 +3,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Link, router } from "expo-router";
 
-
 interface AuthContextProps {
   user: { response_email: string } | null;
-  login: (email: string, password: string) => Promise<boolean>; // Modify return type
-  logout: () => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<boolean>; // Modify return type
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -51,14 +50,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const logout = async () => {
-    await AsyncStorage.removeItem('token');
-    await AsyncStorage.removeItem('email');
-    await AsyncStorage.removeItem('password');
+  const logout = async (): Promise<boolean> => {
+    try {
+      await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('email');
+      await AsyncStorage.removeItem('password');
+      console.log('user logout complete');
 
-    setUser(null);
-    // router.replace("/");
+      setUser(null);
+      
+      return true; // Return true on successful logout
+    } catch (error) {
+      console.log('error logout');
+      console.error(error);
 
+      return false; // Return false on logout failure
+    }
   };
 
   return (

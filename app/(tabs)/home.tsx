@@ -12,6 +12,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { router } from 'expo-router';
 
 
+
 export default function HomeScreen() {
   const authContext = useContext(AuthContext);
   const [customerName, setCustomerName] = useState<string>('');
@@ -31,6 +32,13 @@ export default function HomeScreen() {
         if (response.data) {
           console.log('setting customer name', response.data.first_name);
           setCustomerName(response.data.first_name);
+          await AsyncStorage.setItem('first_name', response.data.first_name);
+          await AsyncStorage.setItem('last_name', response.data.last_name);
+          if (response.data.phone_number !== null && response.data.phone_number !== undefined) {
+            await AsyncStorage.setItem('phone_number', response.data.phone_number);
+          }
+
+
         }
         if (response.data.orders && response.data.orders.length > 0) {
           console.log('setting orders');

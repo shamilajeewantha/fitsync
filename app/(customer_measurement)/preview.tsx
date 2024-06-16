@@ -35,7 +35,7 @@ const ReadComponent: React.FC = () => {
 
   const handlePlaceOrder = () => {
     // Implement your logic for placing an order here
-    console.log('Placing order...');
+    console.log('confirming order...');
   };
 
 

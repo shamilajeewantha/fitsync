@@ -1,81 +1,147 @@
-// components/ReadComponent.tsx
-import React, { useContext, useRef } from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, LayoutChangeEvent } from 'react-native';
-import { NumberContext } from '@/contexts/NumberContexts';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthContext } from '@/contexts/authContext';
+import Icon from 'react-native-vector-icons/Entypo'; // Make sure this import is correct
+import { ThemedText } from '@/components/ThemedText';
+import { useNavigation  } from 'expo-router';
+import { CommonActions } from '@react-navigation/native'
 
 
+export default function ShopView() {
+  const [first_name, setFirst_name] = useState<string>('');
+  const [last_name, setLast_name] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [phone_number, setPhone_number] = useState<string>('');
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
-
-
-const ReadComponent: React.FC = () => {
-  const context = useContext(NumberContext);
-
-  // Handling the case where context is undefined
-  if (!context) {
-    throw new Error('NumberContext is not provided');
-  }
-
-  const { data } = context;
-  const imageLayoutRef = useRef<{ x: number; y: number; width: number; height: number } | null>(null);
+  const { logout } = useContext(AuthContext) || {}; // Destructure logout directly, handling null or undefined case
+  const navigation = useNavigation();
 
 
+  useEffect(() => {
+    const checkAsyncStorage = async () => {
+      try {
+        const first_name = await AsyncStorage.getItem('first_name');
+        const last_name = await AsyncStorage.getItem('last_name');
+        const email = await AsyncStorage.getItem('email');
+        const phone_number = await AsyncStorage.getItem('phone_number');
 
-  const handleImageLayout = (event: LayoutChangeEvent) => {
-    const { x, y, width, height } = event.nativeEvent.layout;
-    imageLayoutRef.current = { x, y, width, height };
-    console.log(`Image Layout:\nX: ${x}\nY: ${y}\nWidth: ${width}\nHeight: ${height}`);
+        console.log('profile first_name:', first_name);
+        console.log('profile last_name:', last_name);
+        console.log('profile email:', email);
+        console.log('profile phone_number:', phone_number);
+
+        if (first_name && last_name && email) {
+          console.log('All required items for profile present in AsyncStorage');
+          setFirst_name(first_name);
+          setLast_name(last_name);
+          setEmail(email);
+          setPhone_number(phone_number || 'No phone number provided'); // Handle null or undefined case
+        } else {
+          console.log('Not all required items for profile are present in AsyncStorage');
+        }
+      } catch (error) {
+        console.error('Error checking AsyncStorage:', error);
+      }
+    };
+
+    checkAsyncStorage();
+  }, []); // Ensure dependencies are properly specified
+
+  const handleLogout = async () => {
+    // Implement your logic for logging out
+    console.log('Logging out...');
+    if (logout) {
+      const success = await logout(); // Call the logout function from context
+      if (success) {
+        console.log('Logout successful');
+        navigation.dispatch(CommonActions.reset({
+          routes: [{key: "index", name: "index"}]
+        }))        // Additional logic on successful logout (e.g., redirect, show message, etc.)
+      } else {
+        console.log('Logout failed');
+        // Handle the failure case (e.g., show error message, retry, etc.)
+      }
+    }
   };
 
 
 
-
   return (
-  <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={require('@/assets/images/woman.png')}
-        onLayout={handleImageLayout}
+    <View style={styles.container}>
+      {/* Big circle with shop icon */}
+      <View style={styles.circle}>
+        <Icon name="shop" size={70} color="white" />
+      </View>
 
-      />
-      <Text style={{ fontSize: 20, marginBottom: 10 }}>Data:</Text>
-      {data.map(({ key, value }, index) => (
-        <View key={index} style={[styles.text, { top: imageLayoutRef.current.y+(key / 100) * imageLayoutRef.current.height, width: screenWidth/1.1 }]}>
-        <Text >measurement {index+1}</Text>
-        <View style={[styles.line, { width: screenWidth-45 }]} />
-        </View>
-      ))}
-      {data.map(({ key, value }, index) => (
-        <Text key={index}>measurement {index+1} : {value}cm</Text>
-      ))}
+      <View style={styles.detailsContainer}>
+        <ThemedText style={styles.headerText} type="title">
+          {first_name} {last_name}
+        </ThemedText>
+        <View style={styles.divider} />
 
+        <ThemedText type="subtitle">Phone</ThemedText>
+        <ThemedText style={styles.detailsText}>{phone_number}</ThemedText>
+        <ThemedText type="subtitle">Email</ThemedText>
+        <ThemedText style={styles.detailsText}>{email}</ThemedText>
+        
+        <Pressable onPress={handleLogout} style={styles.button}>
+          <Text style={styles.buttonText}>Logout</Text>
+        </Pressable>
+      </View>
     </View>
   );
-};
-
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
+    padding: 20,
+    paddingTop: 90, // Adjusted to accommodate the circle at the top
+  },
+  circle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#eb3483',
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center', // Center the circle horizontally
+    marginBottom: 20, // Adjusted to create space between circle and details
   },
-  image: {
-    width: 300, // Define a fixed width for the image
-    height: 600, // Define a fixed height for the image
+  detailsContainer: {
+    flex: 1,
+    justifyContent: 'flex-start', // Align content at the top of this container
+    alignItems: 'center', // Center items horizontally
   },
-  line: {
-    position: 'absolute',
-    height: 2, // Adjusted the height to make the line more visible
-    backgroundColor: 'red', // Change this value to adjust the color of the line
+  headerText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center', // Adjusted to center text horizontally
   },
-  text: {
-    position: 'absolute',
+  divider: {
+    borderBottomColor: 'lightgrey',
+    borderBottomWidth: 1,
+    marginBottom: 10,
+    width: '100%', // Full width divider
   },
-
+  detailsText: {
+    marginBottom: 20,
+    fontFamily: 'SpaceMono',
+  },
+  button: {
+    backgroundColor: '#eb3483',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 18,
+    textAlign: 'center',
+  },
 });
-
-
-
-export default ReadComponent;
