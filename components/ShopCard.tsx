@@ -8,13 +8,13 @@ type RegisterCardProps = {
   onPress: () => void;
 };
 
-const SignUpCard: React.FC<RegisterCardProps> = ({ onPress }) => (
+const ShopCard: React.FC<RegisterCardProps> = ({ onPress }) => (
   <Card onPress={onPress}>
-    <Card.Cover source={require('@/assets/images/registercard.jpg')} />
+    <Card.Cover source={require('@/assets/images/shop.png')} />
     <Card.Content>
-      <Text variant="titleLarge">Sign Up</Text>
+      <Text variant="titleLarge">Shop</Text>
     </Card.Content>
   </Card>
 );
 
-export default SignUpCard;
+export default ShopCard;

@@ -4,8 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '@/contexts/authContext';
 import Icon from 'react-native-vector-icons/Entypo'; // Make sure this import is correct
 import { ThemedText } from '@/components/ThemedText';
-import { useNavigation  } from 'expo-router';
-import { CommonActions } from '@react-navigation/native'
+
 
 
 export default function ShopView() {
@@ -15,7 +14,6 @@ export default function ShopView() {
   const [phone_number, setPhone_number] = useState<string>('');
 
   const { logout } = useContext(AuthContext) || {}; // Destructure logout directly, handling null or undefined case
-  const navigation = useNavigation();
 
 
   useEffect(() => {
@@ -54,10 +52,7 @@ export default function ShopView() {
     if (logout) {
       const success = await logout(); // Call the logout function from context
       if (success) {
-        console.log('Logout successful');
-        navigation.dispatch(CommonActions.reset({
-          routes: [{key: "index", name: "index"}]
-        }))        // Additional logic on successful logout (e.g., redirect, show message, etc.)
+        console.log('Logout successfull');     
       } else {
         console.log('Logout failed');
         // Handle the failure case (e.g., show error message, retry, etc.)

@@ -12,7 +12,6 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { router } from 'expo-router';
 
 
-
 export default function HomeScreen() {
   const authContext = useContext(AuthContext);
   const [customerName, setCustomerName] = useState<string>('');

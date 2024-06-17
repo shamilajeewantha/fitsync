@@ -3,10 +3,14 @@ import { StyleSheet, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '@/contexts/authContext';
 import { router } from "expo-router";  // Assuming this is correctly imported from your router library
-
+import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import LoginCard from '@/components/LoginCard';
-import SignUpCard from '@/components/SignUpCard';
+import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { GetStartedWave } from '@/components/GetStartedWave';
+import CustomerCard from '@/components/CustomerCard';
+import ShopCard from '@/components/ShopCard';
+import { ActivityIndicator, MD2Colors } from 'react-native-paper';
+
 
 export default function index() {
   const authContext = useContext(AuthContext); // Move inside the functional component
@@ -35,7 +39,6 @@ export default function index() {
             // For example, hide cards or navigate to another screen
             // setShowCards(false);
             console.log('login success index)');
-            router.replace("/home");
           }
           else {
             console.log('login failed index');
@@ -54,23 +57,50 @@ export default function index() {
     checkAsyncStorage();
   }, []); // Ensure dependencies are properly specified
 
-  const handleLoginCardPress = () => {
-    console.log('Login card pressed');
-    router.push("/login");
+
+  const handleShopCardPress = async () => {
+    try {
+      console.log('Shop card pressed');
+      await AsyncStorage.setItem('role', 'shop');
+      router.push("/authoptions");
+
+    } catch (error) {
+      console.error('Error saving data', error);
+    }
   };
 
-  const handleSignUpCardPress = () => {
-    console.log('Sign Up card pressed');
-    router.push("/signup");
-  }
+  const handleCustomerCardPress = async () => {
+    try {
+      console.log('Customer card pressed');
+      await AsyncStorage.setItem('role', 'customer');
+      await
+      router.push("/shophome");
+    } catch (error) {
+      console.error('Error saving data', error);
+    }
+  };
 
   return (
-    <View>
-      <ThemedText>ThemedText</ThemedText>
-      {showCards && <LoginCard onPress={handleLoginCardPress} />}
-      {showCards && <SignUpCard onPress={handleSignUpCardPress} />}     
-    </View>
-  );
+    <ParallaxScrollView>
+      {showCards && <ThemedView style={styles.titleContainer}>
+        <ThemedText type="title">Get Started! </ThemedText>
+        <GetStartedWave/>
+      </ThemedView>}
+      {showCards && <ThemedText type="subtitle">Let us know who you are,</ThemedText>}
+
+      {showCards && <ShopCard onPress={handleShopCardPress}/>}
+      {showCards && <CustomerCard onPress={handleCustomerCardPress}/>}
+      <ActivityIndicator size='large' animating={!showCards} color={MD2Colors.pink400} />
+    
+    </ParallaxScrollView>
+    );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({  
+  titleContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: 8,
+  marginBottom: 20,
+},
+});
