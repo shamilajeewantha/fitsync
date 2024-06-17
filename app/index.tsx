@@ -73,7 +73,6 @@ export default function index() {
     try {
       console.log('Customer card pressed');
       await AsyncStorage.setItem('role', 'customer');
-      await
       router.push("/authoptions");
     } catch (error) {
       console.error('Error saving data', error);

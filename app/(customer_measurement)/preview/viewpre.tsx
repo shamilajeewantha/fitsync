@@ -5,8 +5,8 @@ import { NumberContext } from '@/contexts/NumberContexts';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -33,10 +33,13 @@ const ReadComponent: React.FC = () => {
     setImageLoaded(true);
   };
 
+
   const handlePlaceOrder = () => {
-    // Implement your logic for placing an order here
+    // Navigate to shop detail screen with shopId as parameter
     console.log('confirming order...');
+    router.push('preview/summary')
   };
+
 
 
   return (

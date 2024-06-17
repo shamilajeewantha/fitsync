@@ -31,6 +31,7 @@ export default function HomeScreen() {
         if (response.data) {
           console.log('setting customer name', response.data.first_name);
           setCustomerName(response.data.first_name);
+          await AsyncStorage.setItem('id', response.data.id.toString());
           await AsyncStorage.setItem('first_name', response.data.first_name);
           await AsyncStorage.setItem('last_name', response.data.last_name);
           if (response.data.phone_number !== null && response.data.phone_number !== undefined) {

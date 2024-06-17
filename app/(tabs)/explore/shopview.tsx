@@ -4,19 +4,29 @@ import { useLocalSearchParams } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import Icon from 'react-native-vector-icons/Entypo';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function shopview() {
   const params = useLocalSearchParams();
   console.log('shopview parameters : ', params);
 
   // Destructure params object for cleaner access
-  const { shop_name, address, phone, email } = params;
+  const { id = undefined, shop_name, address, phone, email } = params;
 
-  const handlePlaceOrder = () => {
-    // Implement your logic for placing an order here
-    console.log('Placing order...');
-    router.push("/marker")
+  const handlePlaceOrder = async () => {
+    try {
+      if (id !== undefined) {
+        console.log('Placing order...');
+        await AsyncStorage.setItem('shop_id', id.toString());
+        router.push("/marker");
+      } else {
+        console.error('id is undefined. Cannot place order.');
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
+  
 
   return (
     <View style={styles.container}>
