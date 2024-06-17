@@ -6,21 +6,23 @@ import LoginTextInput from '@/components/LoginTextInput';
 import PinkButton from '@/components/PinkButton';
 
 export default function RegisterScreen() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [shopName, setShopName] = useState('');
+  const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const register = async () => {
     try {
-      const response = await axios.post('http://192.168.8.100:3000/customer/register', {
-        first_name: firstName,
-        last_name: lastName,
+      const response = await axios.post('http://192.168.8.100:3000/shop/register', {
+        shop_name: shopName,
+        address: address,
+        phone: phone,
         email: email,
         password: password
       });
-      console.log('message:', response.data.message);
-      console.log('customer:', response.data.customer);
+      console.log('message:', response.data);
+      console.log('shop:', response.data.shop);
 
       router.replace("/login");
     } catch (error) {
@@ -30,8 +32,9 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
-      <LoginTextInput placeholder='First Name' value={firstName} onChangeText={setFirstName}/>
-      <LoginTextInput placeholder='Last Name' value={lastName} onChangeText={setLastName}/>
+      <LoginTextInput placeholder='Shop Name' value={shopName} onChangeText={setShopName}/>
+      <LoginTextInput placeholder='Address Name' value={address} onChangeText={setAddress}/>
+      <LoginTextInput placeholder='Phone' value={phone} onChangeText={setPhone}/>
       <LoginTextInput placeholder='Email' value={email} onChangeText={setEmail}/>
       <LoginTextInput placeholder='Password' isPassword value={password} onChangeText={setPassword} />
       <PinkButton onPress={register} buttonText="Register" />

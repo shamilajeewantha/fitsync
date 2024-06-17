@@ -12,6 +12,10 @@ export default function Layout() {
         name="signup"
         options={{ title: 'Signup' }}
       />
+      <Stack.Screen
+        name="shopsignup"
+        options={{ title: 'Shop Signup' }}
+      />
     </Stack>
   );
 }

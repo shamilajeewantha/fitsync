@@ -38,13 +38,11 @@ export default function LoginScreen() {
     }
   }
 
-
-
   return (
     <View style={styles.container}>
       <LoginTextInput placeholder='Email' value={username} onChangeText={setUsername}/>
       <LoginTextInput placeholder='Password' isPassword value={password} onChangeText={setPassword} />
-      <PinkButton onPress={handleLogin} buttonText="Logout" />
+      <PinkButton onPress={handleLogin} buttonText="Login" />
     </View>  
   );
 }

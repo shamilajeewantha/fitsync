@@ -47,7 +47,16 @@ export default function index() {
 
   const handleSignUpCardPress = () => {
     console.log('Sign Up card pressed');
-    router.push("/signup");
+    if (role === 'shop') {
+      console.log('shop signup opened')
+      router.push("/shopsignup");
+      return;
+    }
+    else if (role === 'customer') {
+      console.log('customer signup opened')
+      router.push("/signup");
+      return;
+    }
   }
 
   return (
