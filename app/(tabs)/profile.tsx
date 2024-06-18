@@ -126,6 +126,8 @@ const styles = StyleSheet.create({
   detailsText: {
     marginBottom: 20,
     fontFamily: 'SpaceMono',
+    textAlign: 'center',
+
   },
   button: {
     backgroundColor: '#eb3483',
