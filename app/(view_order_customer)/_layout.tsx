@@ -19,21 +19,21 @@ export default function TabLayout() {
         headerShown: true,
       }}>
       <Tabs.Screen
-        name="details"
+        name="details_cusord"
         options={{
           title: 'Details',
           headerShown: true,
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+            <TabBarIcon name={focused ? 'newspaper' : 'newspaper-outline'} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="measurements"
+        name="measurements_cusord"
         options={{
           title: 'Measurements',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'search' : 'search-outline'} color={color} />
+            <TabBarIcon name={focused ? 'print' : 'print-outline'} color={color} />
           ),
         }}
       />

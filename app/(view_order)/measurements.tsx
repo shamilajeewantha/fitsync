@@ -34,11 +34,7 @@ const ReadComponent: React.FC = () => {
   };
 
 
-  const handlePlaceOrder = () => {
-    // Navigate to shop detail screen with shopId as parameter
-    console.log('confirming order...');
-    router.push('preview/summary')
-  };
+
 
 
 
