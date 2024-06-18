@@ -60,13 +60,14 @@ export default function ShopView() {
     }
   };
 
+  
 
 
   return (
     <View style={styles.container}>
       {/* Big circle with shop icon */}
       <View style={styles.circle}>
-        <Icon name="shop" size={70} color="white" />
+        <Icon name="v-card" size={70} color="white" />
       </View>
 
       <View style={styles.detailsContainer}>

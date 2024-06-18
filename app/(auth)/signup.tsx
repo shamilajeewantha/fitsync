@@ -10,6 +10,7 @@ export default function RegisterScreen() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phone_number, setPhone_number] = useState('');
 
   const register = async () => {
     try {
@@ -17,7 +18,8 @@ export default function RegisterScreen() {
         first_name: firstName,
         last_name: lastName,
         email: email,
-        password: password
+        password: password,
+        phone_number: phone_number,
       });
       console.log('message:', response.data.message);
       console.log('customer:', response.data.customer);
@@ -32,6 +34,7 @@ export default function RegisterScreen() {
     <View style={styles.container}>
       <LoginTextInput placeholder='First Name' value={firstName} onChangeText={setFirstName}/>
       <LoginTextInput placeholder='Last Name' value={lastName} onChangeText={setLastName}/>
+      <LoginTextInput placeholder='Phone Number' value={phone_number} onChangeText={setPhone_number}/>
       <LoginTextInput placeholder='Email' value={email} onChangeText={setEmail}/>
       <LoginTextInput placeholder='Password' isPassword value={password} onChangeText={setPassword} />
       <PinkButton onPress={register} buttonText="Register" />

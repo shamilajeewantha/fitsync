@@ -24,7 +24,7 @@ export default function TabLayout() {
           title: 'Details',
           headerShown: true,
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'newspaper' : 'newspaper-outline'} color={color} />
+            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
           ),
         }}
       />
@@ -33,7 +33,7 @@ export default function TabLayout() {
         options={{
           title: 'Measurements',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'print' : 'print-outline'} color={color} />
+            <TabBarIcon name={focused ? 'search' : 'search-outline'} color={color} />
           ),
         }}
       />

@@ -1,11 +1,14 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button, Platform } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { NumberContext } from '@/contexts/NumberContexts'; // Import your NumberContext
 import LoginTextInput from '@/components/LoginTextInput';
 import PinkButton from '@/components/PinkButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { router } from 'expo-router';
 
 export default function Measurements() {
   const context = useContext(NumberContext);
@@ -18,6 +21,42 @@ export default function Measurements() {
   }
 
   const { data } = context;
+
+
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+  const [buttonText, setButtonText] = useState('Pick a date');
+  const [time, setTime] = useState('Pick a time');
+
+  const onChange = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios'); // Hide the picker on iOS after selecting
+    setDate(currentDate);
+    if (selectedDate && mode === 'date'){
+      const formattedDate = selectedDate.toDateString();
+      console.log(formattedDate); 
+      setButtonText(formattedDate);
+    }
+    if (selectedDate && mode === 'time'){
+      const formattedTime = selectedDate.toTimeString().substring(0,5);
+      console.log(formattedTime);
+      setTime(formattedTime);
+    }
+  };
+
+  const showMode = (currentMode: 'date' | 'time') => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
 
  const handleSubmit = async () => {
     // Implement your logic for submitting the comments
@@ -40,8 +79,8 @@ export default function Measurements() {
             console.log('id:',new_id);
             console.log('shop_id:',new_shop_id);
         
-            let date = new Date().toJSON();
-            console.log(date);
+            /* let date = new Date().toJSON();
+            console.log(date); */
         
             const response = await axios.post('http://192.168.8.100:3000/order/add', {
                 customerId: new_id,
@@ -52,6 +91,8 @@ export default function Measurements() {
               });
             
               console.log('message:', response.data);
+
+            router.push('/home')
         
         
         
@@ -68,7 +109,7 @@ export default function Measurements() {
   };
 
   return (
-    <View style={styles.container}>
+    <ParallaxScrollView>
       <ThemedText style={styles.title}>Measurements</ThemedText>
       <View style={styles.dataContainer}>
         {data.map(({ key, value }, index) => (
@@ -78,20 +119,33 @@ export default function Measurements() {
           </View>
         ))}
       </View>
-      <ThemedText style={styles.title}>Comments</ThemedText>
 
-      <LoginTextInput placeholder='Comments' value={comment} onChangeText={setComment} style={styles.textInput} />
-      <PinkButton buttonText="Submit" onPress={handleSubmit} />  
+      <View>
+      <View>
+        <PinkButton onPress={showDatepicker} buttonText={buttonText} marginHorizontal='20%' backgroundColor={false}/>
+      </View>
+      <View>
+        <PinkButton onPress={showTimepicker} buttonText={time} marginHorizontal='20%' backgroundColor={false}/>
+      </View>
+      {show && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={mode}
+          is24Hour={true}
+          display="default"
+          onChange={onChange}
+        />
+      )}
     </View>
+    <ThemedText style={styles.title}>Comments</ThemedText>
+    <LoginTextInput placeholder='Comments' value={comment} onChangeText={setComment} style={styles.textInput} />
+    <PinkButton buttonText="Submit" onPress={handleSubmit} />  
+    </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20, // Add some padding for better aesthetics
-    justifyContent: 'center', // Align content in the center
-  },
   title: {
     fontSize: 24, // Set a larger font size for the title
     fontWeight: 'bold', // Make the title bolder
@@ -122,4 +176,5 @@ const styles = StyleSheet.create({
     borderRadius: 5, // Add rounded corners to the text input
     backgroundColor: '#fff', // Set the text input background color
   },
+
 });

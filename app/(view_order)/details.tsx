@@ -4,6 +4,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { useLocalSearchParams } from 'expo-router';
 import { NumberContext } from '@/contexts/NumberContexts';
 import Icon from 'react-native-vector-icons/Entypo'; // Make sure this import is correct
+import ParallaxScrollView from '@/components/ParallaxScrollView';
 
 export default function DetailsScreen() {
   const params = useLocalSearchParams();
@@ -20,16 +21,17 @@ export default function DetailsScreen() {
     console.log('orderview parameters : ', order);
 
     if (order.measurements) {
-      Object.values(order.measurements).forEach(measurement => {
-        const { height, value } = measurement;
-        addData(height, value);
-        console.log('Added data: ', height, value);
+
+      Object.keys(order.measurements).forEach(key => {
+        const measurement = order.measurements[key];
+        console.log(`Measurement: ${key}, Key: ${measurement.key}, Value: ${measurement.value} `);
+        addData(measurement.key, measurement.value);
       });
     }
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ParallaxScrollView >
       <View style={styles.circle}>
         <Icon name="shopping-bag" size={70} color="white" />
       </View>
@@ -52,18 +54,13 @@ export default function DetailsScreen() {
         <ThemedText style={styles.detailsText}>{order.order_comments}</ThemedText>
         
       </View>
-    </View>
+    </ParallaxScrollView>
   );
 }
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    padding: 20,
-    paddingTop: 90, // Adjusted to accommodate the circle at the top
-  },
+
   circle: {
     width: 120,
     height: 120,
