@@ -6,11 +6,9 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import Icon from 'react-native-vector-icons/Entypo'; // Make sure this import is correct
 import { NumberContext } from '@/contexts/NumberContexts';
 
-
 export default function details_cusord() {
   const params = useLocalSearchParams();
   const order = JSON.parse(params.order);
-
 
   const context = useContext(NumberContext);
   if (!context) {
@@ -22,7 +20,6 @@ export default function details_cusord() {
     console.log('orderview parameters : ', order);
 
     if (order.measurements) {
-
       Object.keys(order.measurements).forEach(key => {
         const measurement = order.measurements[key];
         console.log(`Measurement: ${key}, Key: ${measurement.key}, Value: ${measurement.value} `);
@@ -30,6 +27,15 @@ export default function details_cusord() {
       });
     }
   }, []);
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return date.toLocaleDateString(undefined, options);
+  }
+
+  const formattedOrderPlacedDate = formatDate(order.order_placed_date);
+  const formattedExpectedDeliveryDate = formatDate(order.expected_delivery_date);
 
   return (
     <ParallaxScrollView >
@@ -49,20 +55,17 @@ export default function details_cusord() {
         <ThemedText type="subtitle">Email</ThemedText>
         <ThemedText style={styles.detailsText}>{order.shop.email}</ThemedText>
         <ThemedText type="subtitle">Order placed date</ThemedText>
-        <ThemedText style={styles.detailsText}>{order.order_placed_date}</ThemedText>
+        <ThemedText style={styles.detailsText}>{formattedOrderPlacedDate}</ThemedText>
         <ThemedText type="subtitle">Expected delivery date</ThemedText>
-        <ThemedText style={styles.detailsText}>{order.expected_delivery_date}</ThemedText>
+        <ThemedText style={styles.detailsText}>{formattedExpectedDeliveryDate}</ThemedText>
         <ThemedText type="subtitle">Comments</ThemedText>
         <ThemedText style={styles.detailsText}>{order.order_comments}</ThemedText>
-        
       </View>
     </ParallaxScrollView>
   );
 }
 
-
 const styles = StyleSheet.create({
-
   circle: {
     width: 120,
     height: 120,

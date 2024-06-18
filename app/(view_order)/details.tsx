@@ -30,6 +30,15 @@ export default function DetailsScreen() {
     }
   }, []);
 
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return date.toLocaleDateString(undefined, options);
+  }
+
+  const formattedOrderPlacedDate = formatDate(order.order_placed_date);
+  const formattedExpectedDeliveryDate = formatDate(order.expected_delivery_date);
+
   return (
     <ParallaxScrollView >
       <View style={styles.circle}>
@@ -47,9 +56,9 @@ export default function DetailsScreen() {
         <ThemedText type="subtitle">Email</ThemedText>
         <ThemedText style={styles.detailsText}>{order.customer.email}</ThemedText>
         <ThemedText type="subtitle">Order placed date</ThemedText>
-        <ThemedText style={styles.detailsText}>{order.order_placed_date}</ThemedText>
+        <ThemedText style={styles.detailsText}>{formattedOrderPlacedDate}</ThemedText>
         <ThemedText type="subtitle">Expected delivery date</ThemedText>
-        <ThemedText style={styles.detailsText}>{order.expected_delivery_date}</ThemedText>
+        <ThemedText style={styles.detailsText}>{formattedExpectedDeliveryDate}</ThemedText>
         <ThemedText type="subtitle">Comments</ThemedText>
         <ThemedText style={styles.detailsText}>{order.order_comments}</ThemedText>
         
